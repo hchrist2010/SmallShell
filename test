@@ -1,0 +1,16 @@
+catsmall
+copy2
+copy3.c
+copy.c
+make
+output
+p3testscript
+smallsh
+smallsh2.c
+smallsh3.c
+smallsh.c
+test
+test
+
+testout1
+

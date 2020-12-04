@@ -1,0 +1,24 @@
+: 0
+token = hunter
+1
+token = is
+2
+token = here
+3
+token = <
+4
+token = >
+
+
+Display
+Command: hunter
+Arg 1: is
+Arg 2: here
+Input File: in
+Output File: ou!
+Background: 1
+Current Directory: /nfs/stak/users/christhu/Documents/os1/assignments/assignment3/testD
+args: 3
+0
+1
+2

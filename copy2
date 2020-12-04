@@ -1,0 +1,119 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define CMDMAX 2048
+
+struct Input {
+	char uInput[CMDMAX];
+	char command[CMDMAX];
+	char *argument[512];
+	char *inFileName;
+	char *outFileName;
+	int background;
+	int numbArg;
+};
+
+struct Input * commandInit(struct Input *input){
+	input = (struct Input *)malloc(sizeof(struct Input));
+	printf("Init Complete\n");
+	input->numbArg = 0;
+	return(input);
+}
+
+struct Input * getInput(struct Input *input){
+	printf(": ");
+	scanf("%[^\n]s", input->uInput);
+	return(input);
+}
+
+struct Input *parseCommand(struct Input *input){
+	char *token;
+	char *temp;
+	temp = malloc(sizeof(input->uInput));
+	strcpy(temp, input->uInput);
+	token = strtok(temp, "\n");
+	token = strtok(token, "&");
+	token = strtok(token, ">");
+	token = strtok(token, "<");
+
+	strcpy(temp, token);
+
+	token = strtok(temp, " ");
+	strcpy(input->command, token);
+	token = strtok(NULL, " ");
+	int i = 0;
+	while(token != NULL){
+		input->argument[i] = malloc(sizeof(token));
+		strcpy(input->argument[i], token);
+		i++;
+		token = strtok(NULL, " ");
+	}
+	input->numbArg = i;
+	free(temp);
+	free(token);
+
+	temp = malloc(sizeof(input->uInput));
+	strcpy(temp, input->uInput);
+
+	token = strtok(temp, " ");
+	for(i = 0; i < input->numbArg; i++){
+		token = strtok(NULL, " ");
+	}
+	i = 0;
+	token = strtok(NULL, " ");
+	while(i < 3 && token != NULL){
+		if(strcmp(token, "<") == 0){
+			token = strtok(NULL, " ");
+			input->inFileName = (char*)malloc(sizeof(token));
+			strcpy(input->inFileName, token);
+		}
+		if(strcmp(token, ">") == 0){
+			token = strtok(NULL, " ");
+			input->outFileName = (char*)malloc(sizeof(token));
+			strcpy(input->outFileName, token);
+		}
+		if(strcmp(token, "&") == 0){
+			input->background = 1;
+		}
+		token = strtok(NULL, " ");
+		i++;		
+	}
+	free(temp);
+	return input;
+}
+
+void displayCommand(struct Input *input){
+	printf("\n\nDisplay\n");
+	printf("Command: %s\n", input->command);
+	int i;
+	for(i = 0; i < input->numbArg; i++){
+		printf("Arg %d: %s\n", i, input->argument[i]);
+	}
+	printf("Input File: %s\n", input->inFileName);
+	printf("Output File: %s\n", input->outFileName);
+	printf("Background: %d\n", input->background);
+}
+
+void deconCommand(struct Input *input){
+	int i;
+	for(i = 0; i < input->numbArg; i++){
+		free(input->argument[i]);
+	}
+	free(input->outFileName);
+	free(input->inFileName);
+	free(input);	
+}
+
+void newCommand(){
+	struct Input *input;
+	input = commandInit(input);
+	input = getInput(input);
+	input = parseCommand(input);
+	displayCommand(input);
+	deconCommand(input);
+}
+
+int main(){
+	newCommand();
+	return 0;
+}
